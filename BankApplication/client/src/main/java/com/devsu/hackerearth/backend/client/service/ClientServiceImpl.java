@@ -48,15 +48,15 @@ public class ClientServiceImpl implements ClientService {
 	}
 
 	@Override
-	public ClientDto update(Long id, ClientDto clientDto) {
+	public ClientDto update(ClientDto clientDto) {
 		// Update client
-		if(this.clientRepository.findByDniAndIdNot(clientDto.getDni(), id).isPresent()) {
+		if(this.clientRepository.findByDniAndIdNot(clientDto.getDni(), clientDto.getId()).isPresent()) {
 			throw new CustomException(HttpStatus.CONFLICT, "El DNI ingresado está registrado con otro cliente.");
 		}
-		if(this.clientRepository.findByNameAndIdNot(clientDto.getName(), id).isPresent()) {
+		if(this.clientRepository.findByNameAndIdNot(clientDto.getName(), clientDto.getId()).isPresent()) {
 			throw new CustomException(HttpStatus.CONFLICT, "El nombre ingresado está registrado con otro cliente.");
 		}
-		Client oldClient = this.clientRepository.findById(id).orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "Cliente no encontrado."));
+		Client oldClient = this.clientRepository.findById(clientDto.getId()).orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "Cliente no encontrado."));
 		oldClient.setActive(clientDto.isActive());
 		oldClient.setAddress(clientDto.getAddress());
 		oldClient.setAge(clientDto.getAge());
@@ -79,7 +79,10 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	public void deleteById(Long id) {
 		// Delete client
-		Client oldClient = this.clientRepository.findById(id).orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "Cliente no encontrado."));
-		this.clientRepository.delete(oldClient);
+		if (!this.clientRepository.existsById(id)) {
+			throw new CustomException(HttpStatus.NOT_FOUND ,"No encontrado");
+		}
+		this.clientRepository.deleteById(id);
 	}
 }
+

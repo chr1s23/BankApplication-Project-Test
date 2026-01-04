@@ -39,7 +39,11 @@ public class AccountController {
 	public ResponseEntity<AccountDto> get(@PathVariable Long id){
 		// api/accounts/{id}
 		// Get accounts by id
-		return ResponseEntity.ok(this.accountService.getById(id));
+		AccountDto response = this.accountService.getById(id);
+		if (response == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+		return ResponseEntity.ok(response);
 	}
 
 	@PostMapping
@@ -53,14 +57,22 @@ public class AccountController {
 	public ResponseEntity<AccountDto> update(@PathVariable Long id, @RequestBody AccountDto accountDto){
 		// api/accounts/{id}
 		// Update accounts
-		return ResponseEntity.ok(this.accountService.update(id, accountDto));
+		AccountDto response = this.accountService.update(accountDto);
+		if (response == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+		return ResponseEntity.ok(response);
 	}
 
 	@PatchMapping("/{id}")
 	public ResponseEntity<AccountDto> partialUpdate(@PathVariable Long id, @RequestBody PartialAccountDto partialAccountDto){
 		// api/accounts/{id}
 		// Partial update accounts
-		return ResponseEntity.ok(this.accountService.partialUpdate(id, partialAccountDto));
+		AccountDto response = this.accountService.partialUpdate(id, partialAccountDto);
+		if (response == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+		return ResponseEntity.ok(response);
 	}
 
 	@DeleteMapping("/{id}")
@@ -68,7 +80,7 @@ public class AccountController {
 		// api/accounts/{id}
 		// Delete accounts
 		this.accountService.deleteById(id);
-		return ResponseEntity.ok().build();
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 }
 

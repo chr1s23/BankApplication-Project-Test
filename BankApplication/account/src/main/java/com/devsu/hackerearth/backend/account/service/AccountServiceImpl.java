@@ -61,9 +61,9 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto update(Long id, AccountDto accountDto) {
+    public AccountDto update(AccountDto accountDto) {
         // Update account
-        if (this.accountRepository.findByNumberAndIdNot(accountDto.getNumber(), id).isPresent()) {
+        if (this.accountRepository.findByNumberAndIdNot(accountDto.getNumber(), accountDto.getId()).isPresent()) {
             throw new CustomException(HttpStatus.CONFLICT,
                     "El número de cuenta ingresado está asociado con otra cuenta.");
         }
@@ -74,7 +74,7 @@ public class AccountServiceImpl implements AccountService {
         if (clientDto.block() == null) {
             throw new CustomException(HttpStatus.NOT_FOUND, "Cliente no encontrado.");
         }
-        Account oldAccount = this.accountRepository.findById(id)
+        Account oldAccount = this.accountRepository.findById(accountDto.getId())
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "Cuenta no encontrada."));
         oldAccount.setActive(accountDto.isActive());
         oldAccount.setClientId(accountDto.getClientId());
@@ -96,8 +96,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void deleteById(Long id) {
         // Delete account
-        Account oldAccount = this.accountRepository.findById(id)
-                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "Cuenta no encontrada."));
+        Account oldAccount = this.accountRepository.findById(id).orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "Cliente no encontrado."));;
         this.accountRepository.delete(oldAccount);
     }
 

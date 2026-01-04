@@ -10,7 +10,7 @@ public interface ClientService {
 	public List<ClientDto> getAll();
 	public ClientDto getById(Long id);
 	public ClientDto create(ClientDto clientDto);
-	public ClientDto update(Long id, ClientDto clientDto);
+	public ClientDto update(ClientDto clientDto);
 	public ClientDto partialUpdate(Long id, PartialClientDto partialClientDto);
 	public void deleteById(Long id);
 }

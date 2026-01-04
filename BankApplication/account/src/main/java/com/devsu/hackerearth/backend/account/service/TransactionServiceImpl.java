@@ -79,22 +79,6 @@ public class TransactionServiceImpl implements TransactionService {
     public List<BankStatementDto> getAllByAccountClientIdAndDateBetween(Long clientId, Date dateTransactionStart,
             Date dateTransactionEnd) {
         // Report
-        /*List<ReportDto> report = new ArrayList<>();
-        List<Account> clientAccounts = this.accountRepository.findAllByClientId(clientId);
-        List<Transaction> accountTransactions = this.transactionRepository.findAllByDateBetweenAndAccountIdIn(
-                dateTransactionStart, dateTransactionEnd,
-                clientAccounts.stream().map(account -> {
-                    return account.getId();
-                }).collect(Collectors.toList()));
-        Map<Long, List<TransactionDto>> accountsGrouped = accountTransactions.stream().map(TransactionDto::new)
-                .collect(Collectors.groupingBy(TransactionDto::getAccountId));
-        clientAccounts.forEach(account -> {
-            report.add(new ReportDto(account.getId(), account.getNumber(), account.getType(),
-                    account.getInitialAmount(), account.isActive(), clientId,
-                    accountsGrouped.get(account.getId())));
-        });
-        return report;*/
-
         if (dateTransactionStart.after(dateTransactionEnd)) throw new CustomException(HttpStatus.BAD_REQUEST, "La fecha inicio del reporte no puede ser posterior a la fecha fin.");
 
         Mono<ClientDto> clientDto = webClient.get().uri("/api/clients/{id}", clientId).retrieve().bodyToMono(ClientDto.class);

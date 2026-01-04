@@ -39,7 +39,11 @@ public class TransactionController {
     public ResponseEntity<TransactionDto> get(@PathVariable Long id){
 		// api/transactions/{id}
 		// Get transactions by id
-		return ResponseEntity.ok(this.transactionService.getById(id));
+		TransactionDto response = this.transactionService.getById(id);
+		if (response == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+		return ResponseEntity.ok(response);
 	}
 
 	@PostMapping
